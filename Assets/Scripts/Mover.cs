@@ -5,7 +5,6 @@ public class Mover : MonoBehaviour
 {
     protected Rigidbody2D Rigidbody;
     protected Vector2 Direction;
-
     protected bool IsFacingRight;
     protected float Speed;
 

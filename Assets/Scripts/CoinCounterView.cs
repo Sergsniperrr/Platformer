@@ -4,16 +4,26 @@ using TMPro;
 [RequireComponent(typeof(TMP_Text))]
 public class CoinCounterView : MonoBehaviour
 {
+    [SerializeField] private CoinSpawner _coins;
     private TMP_Text _counterText;
+
+    private void OnEnable()
+    {
+        _coins.NumberOfCoinsChanged += OnValueChanged;
+    }
+
+    private void OnDisable()
+    {
+        _coins.NumberOfCoinsChanged -= OnValueChanged;
+    }
 
     private void Start()
     {
         _counterText = GetComponent<TMP_Text>();
     }
 
-    void Update()
+    private void OnValueChanged(int currentNumberOfCoins)
     {
-        if (_counterText.text != Coin.TotalCoins.ToString())
-            _counterText.text = Coin.TotalCoins.ToString();
+        _counterText.text = currentNumberOfCoins.ToString();
     }
 }

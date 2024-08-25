@@ -5,6 +5,8 @@ public class Player : Mover
 {
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _ground;
+    [SerializeField] private CoinSpawner _coins;
+    [SerializeField] private Mover _mover;
 
     private readonly int _velocityOnX = Animator.StringToHash(nameof(_velocityOnX));
     private readonly int _velocityOnY = Animator.StringToHash(nameof(_velocityOnY));
@@ -37,6 +39,15 @@ public class Player : Mover
 
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
             Rigidbody.velocity = Vector2.up * _jumpForce;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Coin coin))
+        {
+            _coins.PickUpCoin();
+            Destroy(coin.gameObject);
+        }
     }
 
     private Vector2 SetMoving(float moveInput)
