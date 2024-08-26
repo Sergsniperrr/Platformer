@@ -1,44 +1,43 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-public class Player : Mover
+[RequireComponent(typeof(Animator), typeof(Rigidbody2D))]
+public class Player : MonoBehaviour
 {
+    private const string Horizontal = nameof(Horizontal);
+
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private LayerMask _ground;
     [SerializeField] private CoinSpawner _coins;
-    [SerializeField] private Mover _mover;
+    [SerializeField] private float _moveSpeed = 5f;
 
     private readonly int _velocityOnX = Animator.StringToHash(nameof(_velocityOnX));
     private readonly int _velocityOnY = Animator.StringToHash(nameof(_velocityOnY));
     private readonly int _onGround = Animator.StringToHash(nameof(_onGround));
 
+    private Mover _mover;
     private Animator _animator;
     private bool _isGrounded;
     private float _groundRadius = 0.3f;
-    private float _jumpForce = 10f;
-    private float _moveInput;
+    private float _direction;
+    private bool _isJump;
 
     private void Start()
     {
-        Rigidbody = GetComponent<Rigidbody2D>();
+        _mover = new Mover(transform.transform, GetComponent<Rigidbody2D>(), _moveSpeed);
         _animator = GetComponent<Animator>();
-        Speed = 5f;
-        Direction = new Vector2(_moveInput * Speed, Rigidbody.velocity.y);
     }
 
     private void FixedUpdate()
     {
-        Rigidbody.velocity = SetMoving(Input.GetAxis("Horizontal"));
-    }
-
-    private void Update()
-    {
         _isGrounded = Physics2D.OverlapCircle(_groundChecker.position, _groundRadius, _ground);
 
-        _animator.SetBool(_onGround, _isGrounded);
+        Move(_direction);
 
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
-            Rigidbody.velocity = Vector2.up * _jumpForce;
+        if (_isJump)
+        {
+            _mover.Jump();
+            _isJump = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -50,17 +49,22 @@ public class Player : Mover
         }
     }
 
-    private Vector2 SetMoving(float moveInput)
+    private void Update()
     {
-        Direction.x = moveInput * Speed;
-        Direction.y = Rigidbody.velocity.y;
+        _animator.SetBool(_onGround, _isGrounded);
 
-        if ((moveInput < 0) == IsFacingRight && moveInput != 0f)
-            Flip();
+        _direction = Input.GetAxis(Horizontal);
 
-        _animator.SetFloat(_velocityOnX, Mathf.Abs(Direction.x));
-        _animator.SetFloat(_velocityOnY, Direction.y);
+        if (_isGrounded && Input.GetKeyDown(KeyCode.Space))
+            _isJump = true;
+    }
 
-        return Direction;
+    private void Move(float moveRatio)
+    {
+        _mover.SetMovement(moveRatio);
+        _mover.Move();
+
+        _animator.SetFloat(_velocityOnX, Mathf.Abs(_mover.VelocityX));
+        _animator.SetFloat(_velocityOnY, _mover.VelocityY);
     }
 }

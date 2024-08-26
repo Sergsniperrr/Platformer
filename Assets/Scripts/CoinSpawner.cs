@@ -16,7 +16,7 @@ public class CoinSpawner : MonoBehaviour
 
     private void Start()
     {
-        List<Vector2> randomPoints = CreateRandomPoints();
+        List<Vector2> randomPoints = CreateRandomPoints(CreateAllPoins());
 
         foreach (Vector2 point in randomPoints)
         {
@@ -47,9 +47,8 @@ public class CoinSpawner : MonoBehaviour
         return allCoinsPoints;
     }
 
-    private List<Vector2> CreateRandomPoints()
+    private List<Vector2> CreateRandomPoints(List<Vector2> allPoints)
     {
-        List<Vector2> allPoints = CreateAllPoins();
         List<Vector2> randomPoints = new();
         Vector2 point;
 
@@ -58,13 +57,10 @@ public class CoinSpawner : MonoBehaviour
 
         for (int i = 0; i < _numberOfSpawnCoins; i++)
         {
-            do
-            {
-                point = allPoints[UnityEngine.Random.Range(0, allPoints.Count)];
-            }
-            while (randomPoints.Contains(point));
+            point = allPoints[UnityEngine.Random.Range(0, allPoints.Count)];
 
             randomPoints.Add(point);
+            allPoints.Remove(point);
         }
 
         return randomPoints;
