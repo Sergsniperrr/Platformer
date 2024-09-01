@@ -7,4 +7,9 @@ public class Coin : MonoBehaviour
     {
         GetComponent<Collider2D>().isTrigger = true;
     }
+
+    public void PickUp()
+    {
+        Destroy(gameObject);
+    }
 }

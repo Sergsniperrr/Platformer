@@ -9,6 +9,8 @@ public class Mover
     private float _speedRatio = 1f;
     private float _jumpForce = 10f;
 
+    public bool IsFacingRight => _isFacingRight;
+
     public Mover(Transform transform, Rigidbody2D rigidbody, float speed)
     {
         _transform = transform;
@@ -17,29 +19,34 @@ public class Mover
     }
 
     public float VelocityX => _speedRatio * _speed;
+
     public float VelocityY => _rigidbody.velocity.y;
 
-    protected void Flip()
-    {
-        float maxRotateAngle = 180f;
-
-        _isFacingRight = !_isFacingRight;
-
-        _transform.Rotate(0f, maxRotateAngle, 0f);
-    }
-
-    public void ChangeDirection()
+    public bool ChangeDirection()
     {
         int directionChanger = -1;
 
         _speed *= directionChanger;
 
         Flip();
+
+        return false;
     }
 
-    public void Jump()
+    public bool Jump(float ratio = 1f)
     {
-        _rigidbody.velocity = Vector2.up * _jumpForce;
+        _rigidbody.velocity = Vector2.up * _jumpForce * ratio;
+
+        return false;
+    }
+    
+    public bool JumpLow()
+    {
+        float ratio = 0.7f;
+
+        Jump(ratio);
+
+        return false;
     }
 
     public void SetMovement(float speedRatio)
@@ -58,5 +65,14 @@ public class Mover
         _rigidbody.velocity = new Vector2(VelocityX, VelocityY);
 
         return _rigidbody.velocity;
+    }
+
+    private void Flip()
+    {
+        float maxRotateAngle = 180f;
+
+        _isFacingRight = !_isFacingRight;
+
+        _transform.Rotate(0f, maxRotateAngle, 0f);
     }
 }

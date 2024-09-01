@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,10 +8,6 @@ public class CoinSpawner : MonoBehaviour
     [SerializeField] private Coin _coinPrefab;
     [SerializeField] private Tilemap _coinsMap;
     [SerializeField] private int _numberOfSpawnCoins = 20;
-
-    private int _collectedCoins;
-
-    public event Action<int> NumberOfCoinsChanged;
 
     private void Start()
     {
@@ -64,10 +59,5 @@ public class CoinSpawner : MonoBehaviour
         }
 
         return randomPoints;
-    }
-
-    public void PickUpCoin()
-    {
-        NumberOfCoinsChanged?.Invoke(++_collectedCoins);
     }
 }

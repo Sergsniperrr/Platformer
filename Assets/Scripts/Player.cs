@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
     private const string Horizontal = nameof(Horizontal);
 
     [SerializeField] private Transform _groundChecker;
+    [SerializeField] private Score _score;
     [SerializeField] private LayerMask _ground;
-    [SerializeField] private CoinSpawner _coins;
     [SerializeField] private float _moveSpeed = 5f;
 
     private readonly int _velocityOnX = Animator.StringToHash(nameof(_velocityOnX));
@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 
     private Mover _mover;
     private Animator _animator;
+    private PlayerInput _input;
     private bool _isGrounded;
     private float _groundRadius = 0.3f;
     private float _direction;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
     {
         _mover = new Mover(transform.transform, GetComponent<Rigidbody2D>(), _moveSpeed);
         _animator = GetComponent<Animator>();
+        _input = new();
     }
 
     private void FixedUpdate()
@@ -44,8 +46,8 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out Coin coin))
         {
-            _coins.PickUpCoin();
-            Destroy(coin.gameObject);
+            _score.IncreaseNomberOfCoin();
+            coin.PickUp();
         }
     }
 
@@ -53,9 +55,9 @@ public class Player : MonoBehaviour
     {
         _animator.SetBool(_onGround, _isGrounded);
 
-        _direction = Input.GetAxis(Horizontal);
+        _direction = _input.VelocityOnX;
 
-        if (_isGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (_isGrounded && _input.IsJumpKeyPress)
             _isJump = true;
     }
 

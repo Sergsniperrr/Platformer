@@ -4,7 +4,8 @@ using TMPro;
 [RequireComponent(typeof(TMP_Text))]
 public class CoinCounterView : MonoBehaviour
 {
-    [SerializeField] private CoinSpawner _coins;
+    [SerializeField] private Score _coins;
+
     private TMP_Text _counterText;
 
     private void OnEnable()
