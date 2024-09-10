@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fall
+  m_Name: CarrotDestroy
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,13 +21,21 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 11d964a7f73f03c479072fa5ca009a7f, type: 3}
+      value: {fileID: -1480010544, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - time: 0.06666667
+      value: {fileID: 82215871, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - time: 0.13333334
+      value: {fileID: 162365752, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - time: 0.2
+      value: {fileID: -1580036807, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - time: 0.26666668
+      value: {fileID: -840893673, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 1
+  m_SampleRate: 15
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -44,13 +52,17 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 11d964a7f73f03c479072fa5ca009a7f, type: 3}
+    - {fileID: -1480010544, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - {fileID: 82215871, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - {fileID: 162365752, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - {fileID: -1580036807, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
+    - {fileID: -840893673, guid: c7cc11a1dab346a41abaac5c61922b8a, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

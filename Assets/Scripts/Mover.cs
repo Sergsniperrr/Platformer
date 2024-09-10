@@ -67,6 +67,16 @@ public class Mover
         return _rigidbody.velocity;
     }
 
+    public void Push(float force, bool isFacingRight)
+    {
+        _rigidbody.velocity = Vector2.zero;
+
+        if (isFacingRight)
+            _rigidbody.AddForce((Vector2.right + Vector2.up) * force, ForceMode2D.Impulse);
+        else
+            _rigidbody.AddForce((Vector2.left + Vector2.up) * force, ForceMode2D.Impulse);
+    }
+
     private void Flip()
     {
         float maxRotateAngle = 180f;

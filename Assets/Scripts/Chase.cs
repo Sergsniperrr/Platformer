@@ -5,24 +5,22 @@ using UnityEngine;
 public class Chase
 {
     private readonly Vector2 _playerModelOffset = new (0f, 0.736839f);
+    private readonly Transform _mainTarget;
 
     private Transform _chaser;
-    private Transform _target;
+    private Transform _currentTarget;
     private Mover _mover;
-
     private bool _isJump;
     private bool _isJumpLow;
     private bool _isNeedFlip;
 
-    public Chase(Transform chaser, Transform target, Mover mover)
+    public Chase(Transform chaser, Transform mainTarget, Mover mover)
     {
         _chaser = chaser;
-        _target = target;
+        _mainTarget = mainTarget;
+        _currentTarget = _mainTarget;
         _mover = mover;
     }
-
-    private Vector2 DirectionToTarget => ((Vector2)(_target.position - _chaser.position) - _playerModelOffset).normalized;
-    private bool IsSameLevelWithTarget => Mathf.Round(_target.position.y - _chaser.position.y - _playerModelOffset.y) == 0f;
 
     public void PerformMoveActions()
     {
@@ -44,15 +42,18 @@ public class Chase
 
     public void ControlFlipOnSameLevelWithTarget()
     {
-        if (IsSameLevelWithTarget)
-            _isNeedFlip = ((_target.position.x - _chaser.position.x) < 0) == _mover.IsFacingRight;
+        if (CheckPresenceTargetOnSameLevel())
+            _isNeedFlip = ((_currentTarget.position.x - _chaser.position.x) < 0) == _mover.IsFacingRight;
     }
 
     public void HandleActionsAtTriggerPoint(TriggerPoint triggerPoint)
     {
         WayAction wayAction;
-        Vector2 direction = DirectionToTarget;
+        Vector2 direction = CalculateDirectionToTarget();
+        float maxValueCoordinateX = 2.4f;
         float minOffset = 0.2f;
+
+        direction = SetNormalizedVector(direction, maxValueCoordinateX);
 
         if (Mathf.Abs(direction.y) <= minOffset)
             direction.y = 0f;
@@ -88,5 +89,43 @@ public class Chase
 
         _isNeedFlip = direction.x > 0;
         _isJumpLow = direction.y < 0;
+    }
+
+    public void ChangeTarget(Transform newTarget)
+    {
+        if (newTarget != null)
+            _currentTarget = newTarget;
+        else
+            _currentTarget = _mainTarget;
+    }
+
+    private Vector2 SetNormalizedVector(Vector2 direction, float maxValueCoordinateX)
+    {        
+        float newCoordinateX = Mathf.Clamp(direction.x, -maxValueCoordinateX, maxValueCoordinateX);
+        float correctZeroValue = 0.001f;
+
+        if (direction.x == 0f)
+            direction.x = correctZeroValue;
+
+        direction.y *= newCoordinateX / direction.x;
+        direction.x = newCoordinateX;
+
+        return direction;
+    }
+
+    private Vector2 CalculateDirectionToTarget()
+    {
+        if (_currentTarget == null)
+            ChangeTarget(_mainTarget);
+
+        return (Vector2)(_currentTarget.position - _chaser.position) - _playerModelOffset;
+    }
+
+    private bool CheckPresenceTargetOnSameLevel()
+    {
+        if (_currentTarget == null)
+            ChangeTarget(_mainTarget);
+
+        return Mathf.Round(_currentTarget.position.y - _chaser.position.y - _playerModelOffset.y) == 0f;
     }
 }
