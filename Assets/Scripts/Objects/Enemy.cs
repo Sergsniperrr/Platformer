@@ -14,7 +14,6 @@ public class Enemy : MonoBehaviour
 
     private Animator _animator;
     private Rigidbody2D _rigidbody;
-    private Transform _currentTarget;
     private Collider2D _newTarget;
     private Chase _chase;
     private Mover _mover;
@@ -22,14 +21,13 @@ public class Enemy : MonoBehaviour
     private bool _canMove = true;
     private float _aggressiveRadius = 5f;
 
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
-        _mover = new Mover(transform, _rigidbody, _moveSpeed);
 
-        _currentTarget = _mainTarget;
-        _chase = new Chase(transform, _currentTarget, _mover);
+        _mover = new Mover(transform, _rigidbody, _moveSpeed);
+        _chase = new Chase(transform, _mainTarget, _mover);
     }
 
     private void FixedUpdate()
@@ -74,19 +72,24 @@ public class Enemy : MonoBehaviour
     {
         _newTarget = Physics2D.OverlapCircle(transform.position, _aggressiveRadius, _players);
 
-        if (_newTarget == null && _currentTarget != _mainTarget)
-        {
-            _currentTarget = _mainTarget;
+        if (_newTarget == null && _chase.CurrentTarget == _mainTarget)
+            return;
 
+        if (_newTarget != null)
+        {
             if (_coroutineOfChangeTarget != null)
-                StopCoroutine(ChangeTargetAfterDelay());
+            {
+                StopCoroutine(_coroutineOfChangeTarget);
+                _coroutineOfChangeTarget = null;
+            }
 
-            _coroutineOfChangeTarget = StartCoroutine(ChangeTargetAfterDelay());
+            if (_newTarget.transform != _chase.CurrentTarget)
+                _chase.ChangeTarget(_newTarget.transform);
         }
-        else if (_newTarget != null && _currentTarget != _newTarget?.transform)
+        else
         {
-            _currentTarget = _newTarget?.transform;
-            _chase.ChangeTarget(_currentTarget);
+            if (_coroutineOfChangeTarget == null)
+                _coroutineOfChangeTarget = StartCoroutine(ChangeTargetAfterDelay());
         }
     }
 
@@ -118,7 +121,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator ChangeTargetAfterDelay()
     {
-        float delay = 5f;
+        float delay = 3f;
 
         yield return new WaitForSeconds(delay);
 

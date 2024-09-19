@@ -8,6 +8,11 @@ public class CoinCounterView : MonoBehaviour
 
     private TMP_Text _counterText;
 
+    private void Awake()
+    {
+        _counterText = GetComponent<TMP_Text>();
+    }
+
     private void OnEnable()
     {
         _coins.NumberOfCoinsChanged += OnValueChanged;
@@ -16,11 +21,6 @@ public class CoinCounterView : MonoBehaviour
     private void OnDisable()
     {
         _coins.NumberOfCoinsChanged -= OnValueChanged;
-    }
-
-    private void Start()
-    {
-        _counterText = GetComponent<TMP_Text>();
     }
 
     private void OnValueChanged(int currentNumberOfCoins)

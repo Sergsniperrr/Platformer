@@ -11,10 +11,30 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
     private float _force = 10f;
+    private float _explosionDuration = 0.15f;
+    private WaitForSeconds _waitEndOfExplosion;
     private int _damage;
     private bool _isFacingRight;
 
     public bool IsEnabled { get; private set; }
+
+    private void Awake()
+    {
+        _renderer = GetComponent<SpriteRenderer>();
+        _collider = GetComponent<CircleCollider2D>();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+
+        _waitEndOfExplosion = new(_explosionDuration);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Enemy enemy))
+            enemy.TakeDamage(_damage, _isFacingRight);
+
+        StartCoroutine(Destroy());
+    }
 
     public void Create(Vector2 startPosition, bool isFacingRight, int damage)
     {
@@ -36,31 +56,13 @@ public class Bullet : MonoBehaviour
         _animator.SetBool(_isEnabled, IsEnabled);
     }
 
-    private void Start()
-    {
-        _renderer = GetComponent<SpriteRenderer>();
-        _collider = GetComponent<CircleCollider2D>();
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.GetComponent<Enemy>())
-            collision.gameObject.GetComponent<Enemy>().TakeDamage(_damage, _isFacingRight);
-
-        StartCoroutine(Destroy());
-    }
-
     private IEnumerator Destroy()
     {
-        float explosionDuration = 0.15f;
-
         _rigidbody.velocity = Vector2.zero;
         _rigidbody.isKinematic = true;
         _animator.SetBool(_isEnabled, false);
 
-        yield return new WaitForSeconds(explosionDuration);
+        yield return _waitEndOfExplosion;
 
         _renderer.enabled = false;
         _collider.enabled = false;

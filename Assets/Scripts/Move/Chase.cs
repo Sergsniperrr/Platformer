@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +7,6 @@ public class Chase
     private readonly Transform _mainTarget;
 
     private Transform _chaser;
-    private Transform _currentTarget;
     private Mover _mover;
     private bool _isJump;
     private bool _isJumpLow;
@@ -18,32 +16,39 @@ public class Chase
     {
         _chaser = chaser;
         _mainTarget = mainTarget;
-        _currentTarget = _mainTarget;
+        CurrentTarget = _mainTarget;
         _mover = mover;
     }
+
+    public Transform CurrentTarget { get; private set; }
 
     public void PerformMoveActions()
     {
         _mover.Move();
 
         if (_isNeedFlip)
-            _isNeedFlip = _mover.ChangeDirection();
+        {
+            _mover.ChangeDirection();
+            _isNeedFlip = false;
+        }
 
         if (_isJump)
         {
-            _isJump = _mover.Jump();
+            _mover.Jump();
+            _isJump = false;
             _isJumpLow = false;
         }
         else if (_isJumpLow)
         {
-            _isJumpLow = _mover.JumpLow();
+            _mover.JumpLow();
+            _isJumpLow = false;
         }
     }
 
     public void ControlFlipOnSameLevelWithTarget()
     {
-        if (CheckPresenceTargetOnSameLevel())
-            _isNeedFlip = ((_currentTarget.position.x - _chaser.position.x) < 0) == _mover.IsFacingRight;
+        if (InspectPresenceOrNoTargetOnSameLevel())
+            _isNeedFlip = ((CurrentTarget.position.x - _chaser.position.x) < 0) == _mover.IsFacingRight;
     }
 
     public void HandleActionsAtTriggerPoint(TriggerPoint triggerPoint)
@@ -94,9 +99,9 @@ public class Chase
     public void ChangeTarget(Transform newTarget)
     {
         if (newTarget != null)
-            _currentTarget = newTarget;
+            CurrentTarget = newTarget;
         else
-            _currentTarget = _mainTarget;
+            CurrentTarget = _mainTarget;
     }
 
     private Vector2 SetNormalizedVector(Vector2 direction, float maxValueCoordinateX)
@@ -115,17 +120,17 @@ public class Chase
 
     private Vector2 CalculateDirectionToTarget()
     {
-        if (_currentTarget == null)
+        if (CurrentTarget == null)
             ChangeTarget(_mainTarget);
 
-        return (Vector2)(_currentTarget.position - _chaser.position) - _playerModelOffset;
+        return (Vector2)(CurrentTarget.position - _chaser.position) - _playerModelOffset;
     }
 
-    private bool CheckPresenceTargetOnSameLevel()
+    private bool InspectPresenceOrNoTargetOnSameLevel()
     {
-        if (_currentTarget == null)
+        if (CurrentTarget == null)
             ChangeTarget(_mainTarget);
 
-        return Mathf.Round(_currentTarget.position.y - _chaser.position.y - _playerModelOffset.y) == 0f;
+        return Mathf.Round(CurrentTarget.position.y - _chaser.position.y - _playerModelOffset.y) == 0f;
     }
 }

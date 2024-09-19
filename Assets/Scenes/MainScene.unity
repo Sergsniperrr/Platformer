@@ -4454,7 +4454,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 516375060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7548f0f756fcf43b583ad210bff51a, type: 3}
+  m_Script: {fileID: 11500000, guid: 24b5453735e8e554d9916cc494747ecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: -3
@@ -7209,7 +7209,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1200736269}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7548f0f756fcf43b583ad210bff51a, type: 3}
+  m_Script: {fileID: 11500000, guid: 24b5453735e8e554d9916cc494747ecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: -3
@@ -7395,7 +7395,7 @@ GameObject:
   - component: {fileID: 1351866512}
   - component: {fileID: 1351866511}
   - component: {fileID: 1351866510}
-  - component: {fileID: 1351866509}
+  - component: {fileID: 1351866515}
   m_Layer: 0
   m_Name: Enemy3
   m_TagString: Untagged
@@ -7403,25 +7403,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1351866509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351866508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7548f0f756fcf43b583ad210bff51a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveSpeed: -3
-  _mainTarget: {fileID: 1952938918}
-  _players:
-    serializedVersion: 2
-    m_Bits: 128
-  _health: 60
-  _damage: 20
 --- !u!61 &1351866510
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7582,6 +7563,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1351866515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351866508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b5453735e8e554d9916cc494747ecb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveSpeed: -3
+  _mainTarget: {fileID: 1952938918}
+  _players:
+    serializedVersion: 2
+    m_Bits: 128
+  _health: 60
+  _damage: 20
 --- !u!1 &1465875568
 GameObject:
   m_ObjectHideFlags: 0
@@ -7709,7 +7709,8 @@ GameObject:
   - component: {fileID: 1641337731}
   - component: {fileID: 1641337737}
   - component: {fileID: 1641337734}
-  - component: {fileID: 1641337736}
+  - component: {fileID: 1641337738}
+  - component: {fileID: 1641337739}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -7834,28 +7835,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1641337736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1641337730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ccdba5ddf2c83b4d8a7d315fb92003f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _score: {fileID: 722155921}
-  _ground:
-    serializedVersion: 2
-    m_Bits: 64
-  _groundChecker: {fileID: 1895996973}
-  _bullet: {fileID: 1086049299}
-  _bulletStartPosition: {fileID: 336349875}
-  _moveSpeed: 5
-  _maxHealth: 60
-  _damage: 20
 --- !u!61 &1641337737
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7901,6 +7880,41 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16638717, y: 0.3216275}
   m_EdgeRadius: 0
+--- !u!114 &1641337738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641337730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 391ac186c1fc97447b9b3e46227127da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _score: {fileID: 722155921}
+  _ground:
+    serializedVersion: 2
+    m_Bits: 64
+  _groundChecker: {fileID: 1895996973}
+  _bullet: {fileID: 1086049299}
+  _bulletStartPosition: {fileID: 336349875}
+  _moveSpeed: 5
+  _maxHealth: 60
+  _damage: 20
+--- !u!114 &1641337739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641337730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c5a2cde2e21a448b53d1c88d73cacd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 1641337738}
 --- !u!1 &1644394892
 GameObject:
   m_ObjectHideFlags: 0

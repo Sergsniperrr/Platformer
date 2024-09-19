@@ -1,12 +1,8 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class HealthPoint : MonoBehaviour
+public class Item : MonoBehaviour
 {
-    [SerializeField] private int _powerOfRegeneration = 20;
-
-    public int PowerOfRegeneration => _powerOfRegeneration;
-
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;

@@ -4,6 +4,7 @@ public class Mover
 {
     private Rigidbody2D _rigidbody;
     private Transform _transform;
+    private Vector2 _velocity = Vector2.zero;
     private bool _isFacingRight;
     private float _speed;
     private float _speedRatio = 1f;
@@ -22,31 +23,25 @@ public class Mover
 
     public float VelocityY => _rigidbody.velocity.y;
 
-    public bool ChangeDirection()
+    public void ChangeDirection()
     {
         int directionChanger = -1;
 
         _speed *= directionChanger;
 
         Flip();
-
-        return false;
     }
 
-    public bool Jump(float ratio = 1f)
+    public void Jump(float ratio = 1f)
     {
-        _rigidbody.velocity = Vector2.up * _jumpForce * ratio;
-
-        return false;
+        _rigidbody.velocity = _jumpForce * ratio * Vector2.up;
     }
-    
-    public bool JumpLow()
+
+    public void JumpLow()
     {
         float ratio = 0.7f;
 
         Jump(ratio);
-
-        return false;
     }
 
     public void SetMovement(float speedRatio)
@@ -60,11 +55,12 @@ public class Mover
             Flip();
     }
 
-    public Vector2 Move()
+    public void Move()
     {
-        _rigidbody.velocity = new Vector2(VelocityX, VelocityY);
+        _velocity.x = VelocityX;
+        _velocity.y = VelocityY;
 
-        return _rigidbody.velocity;
+        _rigidbody.velocity = _velocity;
     }
 
     public void Push(float force, bool isFacingRight)
