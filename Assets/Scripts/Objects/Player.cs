@@ -5,18 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    private const string Horizontal = nameof(Horizontal);
-
+    [SerializeField] private Health _health;
     [SerializeField] private Score _score;
     [SerializeField] private LayerMask _ground;
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private Bullet _bullet;
     [SerializeField] private Transform _bulletStartPosition;
     [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private int _maxHealth = 100;
     [SerializeField] private int _damage = 20;
-
-    public event Action Attack;
 
     private Rigidbody2D _rigidbody;
     private PlayerInput _input;
@@ -25,7 +21,8 @@ public class Player : MonoBehaviour
     private bool _canMove = true;
     private float _groundRadius = 0.3f;
     private float _direction;
-    private int _currentHealth;
+
+    public event Action Attack;
 
     public Mover Mover { get; private set; }
     public bool IsGrounded { get; private set; }
@@ -37,7 +34,6 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         Mover = new Mover(transform.transform, _rigidbody, _moveSpeed);
         _input = new();
-        _currentHealth = _maxHealth;
     }
 
     private void FixedUpdate()
@@ -66,10 +62,7 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.TryGetComponent(out HealthPoint healthPoint))
         {
-            _currentHealth += healthPoint.PowerOfRegeneration;
-
-            if (_currentHealth > _maxHealth)
-                _currentHealth = _maxHealth;
+            _health.TakeHealing(healthPoint.PowerOfRegeneration);
 
             healthPoint.PickUp();
         }
@@ -92,10 +85,10 @@ public class Player : MonoBehaviour
         float lockDuration = 0.8f;
         WaitForSeconds _timeBeforeControlOn = new(lockDuration);
 
-        if (_currentHealth <= 0)
+        if (_health.CurrentValue <= 0)
             return;
 
-        _currentHealth -= damage;
+        _health.TakeDamage(damage);
 
         Mover.Push(force, isFacingRight);
 
@@ -104,7 +97,7 @@ public class Player : MonoBehaviour
         
         StartCoroutine(LockControlWhenAttacked(_timeBeforeControlOn));
 
-        if (_currentHealth <= 0)
+        if (_health.CurrentValue <= 0)
         {
             float delayBeforeDestroy = 0.8f;
             WaitForSeconds waitingForDestroy = new(delayBeforeDestroy);

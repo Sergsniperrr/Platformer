@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Mover
@@ -10,7 +11,7 @@ public class Mover
     private float _speedRatio = 1f;
     private float _jumpForce = 10f;
 
-    public bool IsFacingRight => _isFacingRight;
+    public event Action<float> Rotate;
 
     public Mover(Transform transform, Rigidbody2D rigidbody, float speed)
     {
@@ -19,8 +20,8 @@ public class Mover
         _speed = speed;
     }
 
+    public bool IsFacingRight => _isFacingRight;
     public float VelocityX => _speedRatio * _speed;
-
     public float VelocityY => _rigidbody.velocity.y;
 
     public void ChangeDirection()
@@ -80,5 +81,7 @@ public class Mover
         _isFacingRight = !_isFacingRight;
 
         _transform.Rotate(0f, maxRotateAngle, 0f);
+
+        Rotate?.Invoke(maxRotateAngle);
     }
 }

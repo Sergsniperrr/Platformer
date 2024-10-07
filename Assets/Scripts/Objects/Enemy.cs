@@ -20,6 +20,10 @@ public class Enemy : MonoBehaviour
     private Coroutine _coroutineOfChangeTarget;
     private bool _canMove = true;
     private float _aggressiveRadius = 5f;
+    private float _stunDuration = 0.5f;
+    private float _delayBeforeChangeTarget = 3f;
+    private WaitForSeconds _waitForStunEnd;
+    private WaitForSeconds _waitForChangeTarget;
 
     private void Awake()
     {
@@ -28,6 +32,8 @@ public class Enemy : MonoBehaviour
 
         _mover = new Mover(transform, _rigidbody, _moveSpeed);
         _chase = new Chase(transform, _mainTarget, _mover);
+        _waitForStunEnd = new WaitForSeconds(_stunDuration);
+        _waitForChangeTarget = new WaitForSeconds(_delayBeforeChangeTarget);
     }
 
     private void FixedUpdate()
@@ -95,13 +101,12 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator PushWhenTakingDamage(bool isFacingRight)
     {
-        float disableControlDuration = 0.5f;
         float pushForce = 5f;
 
         _canMove = false;
         _mover.Push(pushForce, isFacingRight);
 
-        yield return new WaitForSeconds(disableControlDuration);
+        yield return _waitForStunEnd;
 
         _canMove = true;
     }
@@ -109,21 +114,20 @@ public class Enemy : MonoBehaviour
     private IEnumerator Die()
     {
         float delayBeforeDestroy = 0.4f;
+        WaitForSeconds waitForDestroy = new(delayBeforeDestroy);
 
         _rigidbody.velocity = Vector2.zero;
         _rigidbody.isKinematic = true;
         _animator.SetTrigger(_isDie);
 
-        yield return new WaitForSeconds(delayBeforeDestroy);
+        yield return waitForDestroy;
 
         Destroy(gameObject);
     }
 
     private IEnumerator ChangeTargetAfterDelay()
     {
-        float delay = 3f;
-
-        yield return new WaitForSeconds(delay);
+        yield return _waitForChangeTarget;
 
         _chase.ChangeTarget(_mainTarget);
     }
