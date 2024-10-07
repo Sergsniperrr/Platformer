@@ -6,12 +6,12 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Health _health;
+    [SerializeField] private Mover _mover;
     [SerializeField] private Score _score;
     [SerializeField] private LayerMask _ground;
     [SerializeField] private Transform _groundChecker;
     [SerializeField] private Bullet _bullet;
     [SerializeField] private Transform _bulletStartPosition;
-    [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private int _damage = 20;
 
     private Rigidbody2D _rigidbody;
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        Mover = new Mover(transform.transform, _rigidbody, _moveSpeed);
+        Mover = _mover;
         _input = new();
     }
 

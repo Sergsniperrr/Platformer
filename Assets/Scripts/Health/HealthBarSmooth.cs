@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HealthBarSmooth : HealthBar
 {
-    private float _rateOfChange = 40f;
+    private float _rateOfChange = 50f;
     private Coroutine _coroutine;
 
     protected override void ChangeValue(int newValue)

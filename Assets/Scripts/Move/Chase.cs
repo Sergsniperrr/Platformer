@@ -1,24 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chase
+public class Chase : MonoBehaviour
 {
-    private readonly Vector2 _playerModelOffset = new (0f, 0.736839f);
-    private readonly Transform _mainTarget;
+    [SerializeField] private Mover _mover;
+    [SerializeField] private Transform _patrolPoint;
 
-    private Transform _chaser;
-    private Mover _mover;
+    private readonly Vector2 _playerModelOffset = new (0f, 0.736839f);
+
     private bool _isJump;
     private bool _isJumpLow;
     private bool _isNeedFlip;
-
-    public Chase(Transform chaser, Transform mainTarget, Mover mover)
-    {
-        _chaser = chaser;
-        _mainTarget = mainTarget;
-        CurrentTarget = _mainTarget;
-        _mover = mover;
-    }
 
     public Transform CurrentTarget { get; private set; }
 
@@ -48,7 +40,7 @@ public class Chase
     public void ControlFlipOnSameLevelWithTarget()
     {
         if (InspectPresenceOrNoTargetOnSameLevel())
-            _isNeedFlip = ((CurrentTarget.position.x - _chaser.position.x) < 0) == _mover.IsFacingRight;
+            _isNeedFlip = ((CurrentTarget.position.x - transform.position.x) < 0) == _mover.IsFacingRight;
     }
 
     public void HandleActionsAtTriggerPoint(TriggerPoint triggerPoint)
@@ -90,7 +82,7 @@ public class Chase
 
     public void HandleCollisionWithSame(Transform sameEnemy)
     {
-        Vector2 direction = sameEnemy.position - _chaser.position;
+        Vector2 direction = sameEnemy.position - transform.position;
 
         _isNeedFlip = direction.x > 0;
         _isJumpLow = direction.y < 0;
@@ -101,7 +93,7 @@ public class Chase
         if (newTarget != null)
             CurrentTarget = newTarget;
         else
-            CurrentTarget = _mainTarget;
+            CurrentTarget = _patrolPoint;
     }
 
     private Vector2 SetNormalizedVector(Vector2 direction, float maxValueCoordinateX)
@@ -121,16 +113,16 @@ public class Chase
     private Vector2 CalculateDirectionToTarget()
     {
         if (CurrentTarget == null)
-            ChangeTarget(_mainTarget);
+            ChangeTarget(_patrolPoint);
 
-        return (Vector2)(CurrentTarget.position - _chaser.position) - _playerModelOffset;
+        return (Vector2)(CurrentTarget.position - transform.position) - _playerModelOffset;
     }
 
     private bool InspectPresenceOrNoTargetOnSameLevel()
     {
         if (CurrentTarget == null)
-            ChangeTarget(_mainTarget);
+            ChangeTarget(_patrolPoint);
 
-        return Mathf.Round(CurrentTarget.position.y - _chaser.position.y - _playerModelOffset.y) == 0f;
+        return Mathf.Round(CurrentTarget.position.y - transform.position.y - _playerModelOffset.y) == 0f;
     }
 }

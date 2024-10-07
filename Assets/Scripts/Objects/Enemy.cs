@@ -4,10 +4,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = -3f;
+    [SerializeField] private Health _health;
+    [SerializeField] private Mover _mover;
+    [SerializeField] private Chase _chase;
     [SerializeField] private Transform _mainTarget;
     [SerializeField] private LayerMask _players;
-    [SerializeField] private int _health = 60;
     [SerializeField] private int _damage = 20;
 
     private readonly int _isDie = Animator.StringToHash(nameof(_isDie));
@@ -15,8 +16,6 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
     private Rigidbody2D _rigidbody;
     private Collider2D _newTarget;
-    private Chase _chase;
-    private Mover _mover;
     private Coroutine _coroutineOfChangeTarget;
     private bool _canMove = true;
     private float _aggressiveRadius = 5f;
@@ -30,8 +29,6 @@ public class Enemy : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody2D>();
 
-        _mover = new Mover(transform, _rigidbody, _moveSpeed);
-        _chase = new Chase(transform, _mainTarget, _mover);
         _waitForStunEnd = new WaitForSeconds(_stunDuration);
         _waitForChangeTarget = new WaitForSeconds(_delayBeforeChangeTarget);
     }
@@ -68,9 +65,9 @@ public class Enemy : MonoBehaviour
     {
         StartCoroutine(PushWhenTakingDamage(isFacingRight));
 
-        _health -= damage;
+        _health.TakeDamage(damage);
 
-        if (_health <= 0)
+        if (_health.CurrentValue <= 0)
             StartCoroutine(Die());
     }
 

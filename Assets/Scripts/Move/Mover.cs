@@ -1,28 +1,28 @@
 using System;
 using UnityEngine;
 
-public class Mover
+[RequireComponent(typeof(Rigidbody2D))]
+public class Mover : MonoBehaviour
 {
+    [SerializeField] private float _speed = 5f;
+
     private Rigidbody2D _rigidbody;
-    private Transform _transform;
     private Vector2 _velocity = Vector2.zero;
     private bool _isFacingRight;
-    private float _speed;
+    
     private float _speedRatio = 1f;
     private float _jumpForce = 10f;
 
     public event Action<float> Rotate;
 
-    public Mover(Transform transform, Rigidbody2D rigidbody, float speed)
-    {
-        _transform = transform;
-        _rigidbody = rigidbody;
-        _speed = speed;
-    }
-
     public bool IsFacingRight => _isFacingRight;
     public float VelocityX => _speedRatio * _speed;
     public float VelocityY => _rigidbody.velocity.y;
+
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
 
     public void ChangeDirection()
     {
@@ -80,7 +80,7 @@ public class Mover
 
         _isFacingRight = !_isFacingRight;
 
-        _transform.Rotate(0f, maxRotateAngle, 0f);
+        transform.Rotate(0f, maxRotateAngle, 0f);
 
         Rotate?.Invoke(maxRotateAngle);
     }
