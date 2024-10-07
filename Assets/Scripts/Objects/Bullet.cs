@@ -33,6 +33,8 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.TryGetComponent(out Enemy enemy))
             enemy.TakeDamage(_damage, _isFacingRight);
 
+        _collider.enabled = false;
+
         StartCoroutine(Destroy());
     }
 
@@ -65,8 +67,6 @@ public class Bullet : MonoBehaviour
         yield return _waitEndOfExplosion;
 
         _renderer.enabled = false;
-        _collider.enabled = false;
-
         IsEnabled = false;
     }
 }
