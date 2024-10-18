@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Enemy enemy))
-            enemy.TakeDamage(_damage, _isFacingRight);
+            enemy.TakeDamage(_damage);
 
         _collider.enabled = false;
 

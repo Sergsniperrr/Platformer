@@ -14,7 +14,6 @@ public class ItemsSpawner : MonoBehaviour
     private void Start()
     {
         List<Vector2> allPoints = CreateAllPoins();
-
         List<Vector2> coins = CreateRandomPoints(allPoints, _numberOfSpawnCoins);
         List<Vector2> healthPoints = CreateRandomPoints(allPoints, _numberOfSpawnHealthPoints);
 
@@ -27,8 +26,10 @@ public class ItemsSpawner : MonoBehaviour
 
     private List<Vector2> CreateAllPoins()
     {
+        float offsetOnX = -15.5f;
+        float offsetOnY = -8.5f;
+        Vector2 offset = new(offsetOnX, offsetOnY);
         List<Vector2> allItemsPoints = new();
-        Vector2 offset = new(-15.5f, -8.5f);
         BoundsInt bounds = _coinsMap.cellBounds;
         TileBase[] allTiles = _coinsMap.GetTilesBlock(bounds);
 

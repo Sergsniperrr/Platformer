@@ -3,16 +3,15 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField, Min(1)] private int _maxValue = 100;
+    [field: SerializeField, Min(1)] public int MaxValue { get; private set; } = 100;
 
     public event Action<int> ChangeValue;
 
-    public int MaxValue => _maxValue;
     public int CurrentValue { get; private set; }
 
     private void Awake()
     {
-        CurrentValue = _maxValue;
+        CurrentValue = MaxValue;
     }
 
     public void TakeDamage(int damage)
@@ -34,8 +33,8 @@ public class Health : MonoBehaviour
         {
             CurrentValue += healingAmount;
 
-            if (CurrentValue > _maxValue)
-                CurrentValue = _maxValue;
+            if (CurrentValue > MaxValue)
+                CurrentValue = MaxValue;
 
             ChangeValue?.Invoke(CurrentValue);
         }

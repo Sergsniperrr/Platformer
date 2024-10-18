@@ -7,8 +7,10 @@ public class Score : MonoBehaviour
 
     public event Action<int> NumberOfCoinsChanged;
 
-    public void IncreaseNomberOfCoin()
+    public void IncreaseNumberOfCoin()
     {
-        NumberOfCoinsChanged?.Invoke(++_collectedCoins);
+        _collectedCoins ++;
+
+        NumberOfCoinsChanged?.Invoke(_collectedCoins);
     }
 }

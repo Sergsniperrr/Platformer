@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Item : MonoBehaviour
+public abstract class Item : MonoBehaviour
 {
     private void Awake()
     {

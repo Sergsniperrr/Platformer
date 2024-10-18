@@ -2,11 +2,12 @@ using UnityEngine;
 
 public static class PlayerAnimatorData
 {
-    public static readonly int _velocityOnX = Animator.StringToHash(nameof(_velocityOnX));
-    public static readonly int _velocityOnY = Animator.StringToHash(nameof(_velocityOnY));
-    public static readonly int _onGround = Animator.StringToHash(nameof(_onGround));
-    public static readonly int _isAttack = Animator.StringToHash(nameof(_isAttack));
-    public static readonly int _isAttacked = Animator.StringToHash(nameof(_isAttacked));
-    public static readonly int _isDamaged = Animator.StringToHash(nameof(_isDamaged));
-    public static readonly int _death = Animator.StringToHash(nameof(_death));
+    public static readonly int s_velocityOnX = Animator.StringToHash(nameof(s_velocityOnX));
+    public static readonly int s_velocityOnY = Animator.StringToHash(nameof(s_velocityOnY));
+    public static readonly int s_onGround = Animator.StringToHash(nameof(s_onGround));
+    public static readonly int s_isAttack = Animator.StringToHash(nameof(s_isAttack));
+    public static readonly int s_isAttacked = Animator.StringToHash(nameof(s_isAttacked));
+    public static readonly int s_isDamaged = Animator.StringToHash(nameof(s_isDamaged));
+    public static readonly int s_death = Animator.StringToHash(nameof(s_death));
+    public static readonly int s_attacked = Animator.StringToHash(nameof(s_attacked));
 }

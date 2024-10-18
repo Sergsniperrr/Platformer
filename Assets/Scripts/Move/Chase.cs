@@ -1,51 +1,50 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Chase : MonoBehaviour
 {
-    [SerializeField] private Mover _mover;
+    [SerializeField] private EnemyMover _mover;
     [SerializeField] private Transform _patrolPoint;
+    [SerializeField] private LayerMask _players;
+    [SerializeField] private float _aggressiveRadius = 5f;
+    [SerializeField] private float _delayBeforeChangeTarget = 3f;
 
     private readonly Vector2 _playerModelOffset = new (0f, 0.736839f);
 
-    private bool _isJump;
-    private bool _isJumpLow;
-    private bool _isNeedFlip;
+    private Transform _currentTarget;
+    private WaitForSeconds _waitForChangeTarget;
+    private Coroutine _coroutineOfChangeTarget;
+    private Collider2D _newTarget;
 
-    public Transform CurrentTarget { get; private set; }
-
-    public void PerformMoveActions()
+    private void Awake()
     {
-        _mover.Move();
+        _waitForChangeTarget = new WaitForSeconds(_delayBeforeChangeTarget);
+    }
 
-        if (_isNeedFlip)
-        {
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out TriggerPoint triggerPoint))
+            HandleActionsAtTriggerPoint(triggerPoint);
+    }
+
+    private void Update()
+    {
+        ControlFlipOnSameLevelWithTarget();
+        HandleOfChangeTarget();
+    }
+
+    private void ControlFlipOnSameLevelWithTarget()
+    {
+        if (InspectPresenceOrNoTargetOnSameLevel() == false)
+            return;
+
+        if (((_currentTarget.position.x - transform.position.x) < 0) == _mover.IsFacingRight)
             _mover.ChangeDirection();
-            _isNeedFlip = false;
-        }
-
-        if (_isJump)
-        {
-            _mover.Jump();
-            _isJump = false;
-            _isJumpLow = false;
-        }
-        else if (_isJumpLow)
-        {
-            _mover.JumpLow();
-            _isJumpLow = false;
-        }
     }
 
-    public void ControlFlipOnSameLevelWithTarget()
+    private void HandleActionsAtTriggerPoint(TriggerPoint triggerPoint)
     {
-        if (InspectPresenceOrNoTargetOnSameLevel())
-            _isNeedFlip = ((CurrentTarget.position.x - transform.position.x) < 0) == _mover.IsFacingRight;
-    }
-
-    public void HandleActionsAtTriggerPoint(TriggerPoint triggerPoint)
-    {
-        WayAction wayAction;
         Vector2 direction = CalculateDirectionToTarget();
         float maxValueCoordinateX = 2.4f;
         float minOffset = 0.2f;
@@ -72,28 +71,47 @@ public class Chase : MonoBehaviour
         if (wayActions.ContainsKey(direction) == false)
             return;
 
-        wayAction = wayActions[direction];
-
-        _isNeedFlip = wayAction.IsFacingRight != _mover.IsFacingRight;
-
-        _isJump = wayAction.IsJump;
-        _isJumpLow = wayAction.IsJumpLow;
+        _mover.ReadWayAction(wayActions[direction]);
     }
 
-    public void HandleCollisionWithSame(Transform sameEnemy)
-    {
-        Vector2 direction = sameEnemy.position - transform.position;
-
-        _isNeedFlip = direction.x > 0;
-        _isJumpLow = direction.y < 0;
-    }
-
-    public void ChangeTarget(Transform newTarget)
+    private void ChangeTarget(Transform newTarget)
     {
         if (newTarget != null)
-            CurrentTarget = newTarget;
+            _currentTarget = newTarget;
         else
-            CurrentTarget = _patrolPoint;
+            _currentTarget = _patrolPoint;
+    }
+
+    private void HandleOfChangeTarget()
+    {
+        _newTarget = Physics2D.OverlapCircle(transform.position, _aggressiveRadius, _players);
+
+        if (_newTarget == null && _currentTarget == _patrolPoint)
+            return;
+
+        if (_newTarget != null)
+        {
+            if (_coroutineOfChangeTarget != null)
+            {
+                StopCoroutine(_coroutineOfChangeTarget);
+                _coroutineOfChangeTarget = null;
+            }
+
+            if (_newTarget.transform != _currentTarget)
+                ChangeTarget(_newTarget.transform);
+        }
+        else
+        {
+            if (_coroutineOfChangeTarget == null)
+                _coroutineOfChangeTarget = StartCoroutine(ChangeTargetAfterDelay());
+        }
+    }
+
+    private IEnumerator ChangeTargetAfterDelay()
+    {
+        yield return _waitForChangeTarget;
+
+        ChangeTarget(_patrolPoint);
     }
 
     private Vector2 SetNormalizedVector(Vector2 direction, float maxValueCoordinateX)
@@ -112,17 +130,17 @@ public class Chase : MonoBehaviour
 
     private Vector2 CalculateDirectionToTarget()
     {
-        if (CurrentTarget == null)
+        if (_currentTarget == null)
             ChangeTarget(_patrolPoint);
 
-        return (Vector2)(CurrentTarget.position - transform.position) - _playerModelOffset;
+        return (Vector2)(_currentTarget.position - transform.position) - _playerModelOffset;
     }
 
     private bool InspectPresenceOrNoTargetOnSameLevel()
     {
-        if (CurrentTarget == null)
+        if (_currentTarget == null)
             ChangeTarget(_patrolPoint);
 
-        return Mathf.Round(CurrentTarget.position.y - transform.position.y - _playerModelOffset.y) == 0f;
+        return Mathf.Round(_currentTarget.position.y - transform.position.y - _playerModelOffset.y) == 0f;
     }
 }

@@ -36,10 +36,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 4
-    m_ConditionEvent: _velocityOnX
+    m_ConditionEvent: s_velocityOnX
     m_EventTreshold: 0.1
   - m_ConditionMode: 1
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3083288311508994357}
@@ -64,10 +64,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
     m_EventTreshold: 0
   - m_ConditionMode: 4
-    m_ConditionEvent: _velocityOnX
+    m_ConditionEvent: s_velocityOnX
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3083288311508994357}
@@ -92,7 +92,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: _isAttack
+    m_ConditionEvent: s_isAttack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4557177266882261759}
@@ -117,11 +117,14 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
     m_EventTreshold: 0
   - m_ConditionMode: 3
-    m_ConditionEvent: _velocityOnX
+    m_ConditionEvent: s_velocityOnX
     m_EventTreshold: 0.1
+  - m_ConditionMode: 2
+    m_ConditionEvent: s_isDamaged
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5302568375854685233}
   m_Solo: 0
@@ -145,37 +148,37 @@ AnimatorController:
   m_Name: Bunny
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: _velocityOnX
+  - m_Name: s_velocityOnX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: _onGround
+  - m_Name: s_onGround
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 1
     m_Controller: {fileID: 9100000}
-  - m_Name: _velocityOnY
+  - m_Name: s_velocityOnY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: _isAttack
+  - m_Name: s_isAttack
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: _isAttacked
+  - m_Name: s_isAttacked
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: _isDamaged
+  - m_Name: s_isDamaged
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -201,17 +204,20 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: s_isDamaged
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5885907962164215909}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.12807158
   m_TransitionOffset: 0
   m_ExitTime: 0.516129
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -251,10 +257,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: _isDamaged
+    m_ConditionEvent: s_isDamaged
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4226720311108578302}
@@ -279,10 +285,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 3
-    m_ConditionEvent: _velocityOnX
+    m_ConditionEvent: s_velocityOnX
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5302568375854685233}
@@ -307,7 +313,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: _isAttack
+    m_ConditionEvent: s_isAttack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3083288311508994357}
@@ -332,10 +338,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: _isAttacked
+    m_ConditionEvent: s_isDamaged
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: _isDamaged
+    m_ConditionEvent: s_isAttacked
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3398825066501121994}
@@ -431,7 +437,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attacked
+  m_Name: s_attacked
   m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
@@ -439,7 +445,7 @@ AnimatorState:
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
+  m_WriteDefaultValues: 0
   m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
@@ -503,7 +509,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: _moveSpeed
     m_Mirror: 0
-  m_BlendParameter: _velocityOnY
+  m_BlendParameter: s_velocityOnY
   m_BlendParameterY: _moveSpeed
   m_MinThreshold: -1
   m_MaxThreshold: 1
@@ -519,7 +525,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: _onGround
+    m_ConditionEvent: s_onGround
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: s_isDamaged
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3083288311508994357}
@@ -596,7 +605,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _death
+  m_Name: s_death
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
