@@ -28,9 +28,17 @@ public class Enemy : MonoBehaviour
 
         _mover.PushBack(pushForce);
 
-        _health.TakeDamage(damage);
+        _health.Decrease(damage);
 
-        if (_health.CurrentValue <= 0)
+        if (_health.IsZeroValue)
+            StartCoroutine(Die());
+    }
+
+    public void TakeDamageFast(int damage)
+    {
+        _health.DecreaseFast(damage);
+
+        if (_health.IsZeroValue)
             StartCoroutine(Die());
     }
 

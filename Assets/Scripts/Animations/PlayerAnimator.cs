@@ -66,9 +66,11 @@ public class PlayerAnimator : MonoBehaviour
 
     private IEnumerator Shoot(float swingDuration)
     {
+        WaitForSeconds swingTime = new WaitForSeconds(swingDuration);
+
         _animator.SetBool(PlayerAnimatorData.s_isAttack, true);
 
-        yield return new WaitForSeconds(swingDuration);
+        yield return swingTime;
 
         _animator.SetBool(PlayerAnimatorData.s_isAttack, false);
     }

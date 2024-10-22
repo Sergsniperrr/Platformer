@@ -3,40 +3,59 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [field: SerializeField, Min(1)] public int MaxValue { get; private set; } = 100;
+    [field: SerializeField, Min(1)] public int MaxValue { get; private set; }
 
-    public event Action<int> ChangeValue;
+    private int _currentValue;
 
-    public int CurrentValue { get; private set; }
+    public event Action<int> ValueChanged;
+    public event Action<int> ValueChangedFast;
 
-    private void Awake()
+    public bool IsZeroValue => _currentValue <= 0;
+
+    protected virtual void Awake()
     {
-        CurrentValue = MaxValue;
+        _currentValue = MaxValue;
     }
 
-    public void TakeDamage(int damage)
+    public void Decrease(int value)
     {
-        if (damage > 0)
+        if (value > 0)
         {
-            CurrentValue -= damage;
+            _currentValue -= value;
 
-            if (CurrentValue < 0)
-                CurrentValue = 0;
+            if (_currentValue < 0)
+            {
+                _currentValue = 0;
+            }
 
-            ChangeValue?.Invoke(CurrentValue);
+            ValueChanged?.Invoke(_currentValue);
         }
     }
 
-    public void TakeHealing(int healingAmount)
+    public void Increase(int value)
     {
-        if (healingAmount > 0)
+        if (value > 0)
         {
-            CurrentValue += healingAmount;
+            _currentValue += value;
 
-            if (CurrentValue > MaxValue)
-                CurrentValue = MaxValue;
+            if (_currentValue > MaxValue)
+                _currentValue = MaxValue;
 
-            ChangeValue?.Invoke(CurrentValue);
+            ValueChanged?.Invoke(_currentValue);
         }
+    }
+
+    public void DecreaseFast(int value)
+    {
+        Decrease(value);
+
+        ValueChangedFast?.Invoke(_currentValue);
+    }
+
+    public void IncreaseFast(int value)
+    {
+        Increase(value);
+
+        ValueChangedFast?.Invoke(_currentValue);
     }
 }
