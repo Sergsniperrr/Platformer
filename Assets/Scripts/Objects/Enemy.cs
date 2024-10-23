@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
             player.TakeDamage(_damage);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         float pushForce = 5f;
 
@@ -34,12 +34,19 @@ public class Enemy : MonoBehaviour
             StartCoroutine(Die());
     }
 
-    public void TakeDamageFast(int damage)
+    public float TransferHealth(float health)
     {
-        _health.DecreaseFast(damage);
+        if (_health.CurrentValue == 0)
+            return 0;
+
+        health = Mathf.Min(health, _health.CurrentValue);
+
+        _health.DecreaseFast(health);
 
         if (_health.IsZeroValue)
             StartCoroutine(Die());
+
+        return health;
     }
 
     private IEnumerator Die()

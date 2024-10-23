@@ -354,7 +354,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 8, y: 0}
-  m_SizeDelta: {x: 15.1, y: 2.1}
+  m_SizeDelta: {x: 15, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &38115999
 GameObject:
@@ -3468,10 +3468,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9036523e90530694ea86ec10d307a1ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Radius>k__BackingField: 8
   _enemiesLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  Radius: 20
 --- !u!114 &281247065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8242,8 +8242,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1190401109}
   - component: {fileID: 1190401111}
+  - component: {fileID: 1190401112}
   m_Layer: 5
-  m_Name: EnergyBar
+  m_Name: VampireBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8321,6 +8322,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1190401112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1190401108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b0414d7fa3457847b4528b5bd590f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1200736269
 GameObject:
   m_ObjectHideFlags: 0
@@ -9600,7 +9613,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 8, y: 0}
-  m_SizeDelta: {x: 15.1, y: 2.1}
+  m_SizeDelta: {x: 15, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1582457572
 GameObject:
@@ -10108,11 +10121,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 1641337740}
-  _slider: {fileID: 1190401111}
+  _progressBar: {fileID: 1190401112}
   _aura: {fileID: 281247064}
-  _actionTime: 10
+  _actionTime: 50
   _cooldown: 1
-  _healthPerSecond: 20
+  _healthPerSecond: 5
 --- !u!1 &1644394892
 GameObject:
   m_ObjectHideFlags: 0

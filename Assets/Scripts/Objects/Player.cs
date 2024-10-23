@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
             _health.Increase(healthPoint.PowerOfRegeneration);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         float pushForce = 6f;
         float lockDuration = 0.8f;

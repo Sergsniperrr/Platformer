@@ -1,22 +1,17 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Vampire : MonoBehaviour
 {
     [SerializeField] private Health _health;
-    [SerializeField] private Slider _slider;
+    [SerializeField] private VampireBar _progressBar;
     [SerializeField] private VampiricAura _aura;
     [SerializeField] private float _actionTime = 6f;
     [SerializeField] private float _cooldown = 4f;
     [SerializeField] private int _healthPerSecond = 5;
 
-    private Coroutine _coroutineOfUseSkill;
-    private Coroutine _coroutineOfRegenerateSkill;
     private PlayerInput _input;
-
-    public bool _isWorking { get; private set; }
-    public bool _isReady { get; private set; } = true;
+    private bool _isReady = true;
 
     private void Awake()
     {
@@ -26,69 +21,51 @@ public class Vampire : MonoBehaviour
     private void Update()
     {
         if (_input.IsVampirismKeyPress && _isReady)
-        {
-            if (_coroutineOfRegenerateSkill != null)
-                StopCoroutine(_coroutineOfRegenerateSkill);
-
-            _coroutineOfUseSkill = StartCoroutine(UseSkill());
-        }
+            StartCoroutine(UseSkill());
     }
 
-    private void StealHealth(Enemy enemy, int stealedHealth)
+    private void StealHealth(Enemy enemy, float stealedHealth)
     {
-        enemy.TakeDamageFast(stealedHealth);
+        stealedHealth = enemy.TransferHealth(stealedHealth);
         _health.IncreaseFast(stealedHealth);
     }
 
     private IEnumerator UseSkill()
     {
-        int hitPoint = 1;
-        float second = 1f;
         float counter = 0f;
-        float timeForOneHitPoint = second / _healthPerSecond;
         Enemy enemy;
 
         _isReady = false;
-        _isWorking = true;
-        _slider.maxValue = _actionTime;
-        _slider.value = _actionTime;
         _aura.Enable();
 
-        while (_slider.value > 0)
+        while (counter < _actionTime)
         {
             enemy = _aura.SearchTarget();
 
             if (enemy != null)
-            {
-                counter += Time.deltaTime;
+                StealHealth(enemy, _healthPerSecond * Time.deltaTime);
 
-                if (counter >= timeForOneHitPoint)
-                {
-                    StealHealth(enemy, hitPoint);
+            counter += Time.deltaTime;
 
-                    counter = 0f;
-                }
-            }
-
-            _slider.value -= Time.deltaTime;
+            _progressBar.Decrease(_progressBar.MaxValue * Time.deltaTime / _actionTime);
 
             yield return null;
         }
 
-        _coroutineOfRegenerateSkill = StartCoroutine(RegenerateSkill());
+        StartCoroutine(RegenerateSkill());
     }
 
     private IEnumerator RegenerateSkill()
     {
-        StopCoroutine(_coroutineOfUseSkill);
+        float counter = 0;
 
-        _isWorking = false;
-        _slider.maxValue = _cooldown;
         _aura.Disable();
 
-        while (_slider.value < _cooldown)
+        while (counter < _cooldown)
         {
-            _slider.value += Time.deltaTime;
+            counter += Time.deltaTime;
+
+            _progressBar.Increase(_progressBar.MaxValue * Time.deltaTime / _cooldown);
 
             yield return null;
         }

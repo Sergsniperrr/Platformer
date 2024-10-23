@@ -30,12 +30,12 @@ public class HealthBar : MonoBehaviour
         _value.ValueChangedFast -= ChangeValueFast;
     }
 
-    private void ChangeValueFast(int newValue)
+    private void ChangeValueFast(float newValue)
     {
         _slider.value = newValue;
     }
 
-    private void ChangeValue(int newValue)
+    private void ChangeValue(float newValue)
     {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
@@ -43,7 +43,7 @@ public class HealthBar : MonoBehaviour
         _coroutine = StartCoroutine(SmoothChangeValue(newValue));
     }
 
-    private IEnumerator SmoothChangeValue(int newValue)
+    private IEnumerator SmoothChangeValue(float newValue)
     {
         while (_slider.value != newValue)
         {
