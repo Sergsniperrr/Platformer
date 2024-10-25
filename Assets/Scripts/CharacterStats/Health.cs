@@ -11,7 +11,7 @@ public class Health : MonoBehaviour
     public float CurrentValue { get; private set; }
     public bool IsZeroValue => CurrentValue <= 0;
 
-    protected virtual void Awake()
+    private void Awake()
     {
         CurrentValue = MaxValue;
     }
@@ -19,27 +19,13 @@ public class Health : MonoBehaviour
     public void Decrease(float value)
     {
         if (value > 0)
-        {
-            CurrentValue -= value;
-
-            if (CurrentValue < 0)
-                CurrentValue = 0;
-
-            ValueChanged?.Invoke(CurrentValue);
-        }
+            ChangeValue(-value);
     }
 
     public void Increase(float value)
     {
         if (value > 0)
-        {
-            CurrentValue += value;
-
-            if (CurrentValue > MaxValue)
-                CurrentValue = MaxValue;
-
-            ValueChanged?.Invoke(CurrentValue);
-        }
+            ChangeValue(value);
     }
 
     public void DecreaseFast(float value)
@@ -54,5 +40,12 @@ public class Health : MonoBehaviour
         Increase(value);
 
         ValueChangedFast?.Invoke(CurrentValue);
+    }
+
+    private void ChangeValue(float value)
+    {
+        CurrentValue = Mathf.Clamp(CurrentValue + value, 0, MaxValue);
+
+        ValueChanged?.Invoke(CurrentValue);
     }
 }

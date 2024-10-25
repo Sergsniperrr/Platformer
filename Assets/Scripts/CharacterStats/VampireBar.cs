@@ -4,40 +4,27 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class VampireBar : MonoBehaviour
 {
-    private Slider _slider;
+    [SerializeField] private Vampire _vampire;
 
-    public float MaxValue => _slider.maxValue;
+    private Slider _slider;
 
     private void Awake()
     {
         _slider = GetComponent<Slider>();
     }
 
-    public void Increase(float value)
+    private void OnEnable()
     {
-        if (value <= 0f)
-            return;
-
-        if (_slider.value + value > _slider.maxValue)
-        {
-            _slider.value = _slider.maxValue;
-            return;
-        }
-
-        _slider.value += value;
+        _vampire.SkillProgressTimeChanged += ChangeValue;
     }
 
-    public void Decrease(float value)
+    private void OnDisable()
     {
-        if (value <= 0f)
-            return;
+        _vampire.SkillProgressTimeChanged -= ChangeValue;
+    }
 
-        if (_slider.value - value < 0)
-        {
-            _slider.value = 0;
-            return;
-        }
-
-        _slider.value -= value;
+    private void ChangeValue(float fillfactor)
+    {
+        _slider.value = Mathf.Clamp(_slider.maxValue * fillfactor, 0, _slider.maxValue);
     }
 }

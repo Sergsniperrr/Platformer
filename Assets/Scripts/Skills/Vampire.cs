@@ -1,10 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Vampire : MonoBehaviour
 {
     [SerializeField] private Health _health;
-    [SerializeField] private VampireBar _progressBar;
     [SerializeField] private VampiricAura _aura;
     [SerializeField] private float _actionTime = 6f;
     [SerializeField] private float _cooldown = 4f;
@@ -12,6 +12,8 @@ public class Vampire : MonoBehaviour
 
     private PlayerInput _input;
     private bool _isReady = true;
+
+    public event Action<float> SkillProgressTimeChanged;
 
     private void Awake()
     {
@@ -32,22 +34,22 @@ public class Vampire : MonoBehaviour
 
     private IEnumerator UseSkill()
     {
-        float counter = 0f;
+        float counter = _actionTime;
         Enemy enemy;
 
         _isReady = false;
         _aura.Enable();
 
-        while (counter < _actionTime)
+        while (counter > 0)
         {
             enemy = _aura.SearchTarget();
 
             if (enemy != null)
                 StealHealth(enemy, _healthPerSecond * Time.deltaTime);
 
-            counter += Time.deltaTime;
+            counter -= Time.deltaTime;
 
-            _progressBar.Decrease(_progressBar.MaxValue * Time.deltaTime / _actionTime);
+            SkillProgressTimeChanged?.Invoke(counter / _actionTime);
 
             yield return null;
         }
@@ -65,7 +67,7 @@ public class Vampire : MonoBehaviour
         {
             counter += Time.deltaTime;
 
-            _progressBar.Increase(_progressBar.MaxValue * Time.deltaTime / _cooldown);
+            SkillProgressTimeChanged?.Invoke(counter / _cooldown);
 
             yield return null;
         }
