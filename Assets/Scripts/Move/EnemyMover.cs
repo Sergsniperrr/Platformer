@@ -33,7 +33,7 @@ public class EnemyMover : Mover
         if (_coroutinePush != null)
             StopCoroutine(_coroutinePush);
 
-        Push(force, !IsFacingRight);
+        Push(force, IsFacingRight == false);
 
         _coroutinePush = StartCoroutine(PushWhenTakingDamage());
     }

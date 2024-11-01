@@ -5,7 +5,9 @@ public abstract class Item : MonoBehaviour
 {
     private void Awake()
     {
-        GetComponent<Collider2D>().isTrigger = true;
+        Collider2D _collider = GetComponent<Collider2D>();
+
+        _collider.isTrigger = true;
     }
 
     public void PickUp()
